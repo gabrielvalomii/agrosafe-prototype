@@ -5,52 +5,12 @@ from django.contrib.auth.hashers import make_password, check_password
 import json
 from django.utils import timezone
 from datetime import timedelta
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def home(request):
-    if request.method == 'POST':
-        username = request.POST.get('cnpj')
-        password = request.POST.get('password')
-        
-        if not username or not password:
-            return render(request, 'main/login.html', {'erro': 'Usuário e senha são obrigatórios.'})
-        
-        granja = Granja.objects.filter(CNPJ=username).first()
-        if not granja or not check_password(password, granja.senha):
-            return render(request, 'main/login.html', {'erro': 'Usuário ou senha inválidos.'})
-        
-        request.session['granja_id'] = granja.id
-        request.session['granja_nome'] = granja.nome
-        return render(request, 'main/login.html', {'sucesso': f'Bem-vindo, {granja.nome}!'})
-    
-    return render(request, 'main/login.html')
-
+    return redirect('http://localhost:5173/')
 def cadastro_page(request):
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        CNPJ = request.POST.get('cnpj')
-        regiao = request.POST.get('regiao')
-        telefone = request.POST.get('telefone')
-        email_corporativo = request.POST.get('email_corporativo')
-        senha = request.POST.get('senha')
-        
-        if not nome or not CNPJ or not senha:
-            return render(request, 'main/cadastro.html', {'erro': 'Nome, CNPJ e senha são obrigatórios.'})
-        
-        if Granja.objects.filter(CNPJ=CNPJ).exists():
-            return render(request, 'main/cadastro.html', {'erro': 'CNPJ já cadastrado.'})
-        
-        senha_hash = make_password(senha)
-        Granja.objects.create(
-            nome=nome,
-            CNPJ=CNPJ,
-            regiao=regiao,
-            telefone=telefone,
-            email_corporativo=email_corporativo,
-            senha=senha_hash
-        )
-        return render(request, 'main/cadastro.html', {'sucesso': 'Granja cadastrada com sucesso!'})
-    return render(request, 'main/cadastro.html')
+    return redirect('http://localhost:5173/')
 
 # Cadastro da granja.
 @csrf_exempt
